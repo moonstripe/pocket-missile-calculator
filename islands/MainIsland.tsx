@@ -356,7 +356,7 @@ export default function MainIsland() {
   const handleSubmit = async () => {
     setIsLoading(true)
     // let base = "https://trajapi.moonstripe.com/api/sim_parameters"
-    const base = "http://localhost:8000/api/python_hello_world"
+    const base = "/api/python_hello_world"
 
     let params = "?"
 
