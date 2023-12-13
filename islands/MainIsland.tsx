@@ -16,6 +16,7 @@ export default function MainIsland() {
   const [reentryDiameter, setReentryDiameter] = useState<number>(0);
   const [estimatedRange, setEstimatedRange] = useState<number>(0);
   const [burnoutAngle, setBurnoutAngle] = useState<number>(0);
+  const [trajectoryModel, setTrajectoryModel] = useState<"Minimum Energy" | "Burnout Angle">("Minimum Energy")
 
   const [fuelMasses, setFuelMasses] = useState<Array<number>>([0])
   const [dryMasses, setDryMasses] = useState<Array<number>>([0])
@@ -281,6 +282,10 @@ export default function MainIsland() {
     setBurnoutAngle(parseFloat(e.target.value))
   }
 
+  const changeTrajectoryModel = (e) => {
+    setTrajectoryModel(e.target.value)
+  }
+
   const changeFuelMass = (e) => {
     const relevantIndex = e.target.id.split('')[e.target.id.split('').length - 1] - 1
 
@@ -356,7 +361,7 @@ export default function MainIsland() {
   const handleSubmit = async () => {
     setIsLoading(true)
     // let base = "https://trajapi.moonstripe.com/api/sim_parameters"
-    const base = "/api/python_hello_world"
+    const base = "https://traj-calc.moonstripe.workers.dev"
 
     let params = "?"
 
@@ -428,7 +433,10 @@ export default function MainIsland() {
     params = params.concat(`estimated_range=${estimatedRange}&`)
 
     // Add burnout angle
-    params = params.concat(`burnout_angle=${burnoutAngle}`)
+    params = params.concat(`burnout_angle=${burnoutAngle}&`)
+
+    // Add trajectory model
+    params = params.concat(`trajectory_model=${trajectoryModel}`)
 
     // console.log("payload:", payload)
     // console.log("missile diameter:", missileDiameter)
@@ -453,19 +461,15 @@ export default function MainIsland() {
     let respJSON = await resp.json()
 
     console.log(respJSON)
-
-    console.log("received response")
-
-    console.log(respJSON.results)
-    let time = respJSON.results.Time
-    let velocity = respJSON.results.Velocity
-    let cd = respJSON.results.CD
-    let drag = respJSON.results.Drag
-    let gamma = respJSON.results.Gamma
-    let height = respJSON.results.Height
-    let mass = respJSON.results.Mass
-    let range = respJSON.results.Range
-    let thrust = respJSON.results.Thrust
+    let time = respJSON.Time
+    let velocity = respJSON.Velocity
+    let cd = respJSON.CD
+    let drag = respJSON.Drag
+    let gamma = respJSON.Gamma
+    let height = respJSON.Height
+    let mass = respJSON.Mass
+    let range = respJSON.Range
+    let thrust = respJSON.Thrust
 
     const newDataset = []
 
@@ -787,6 +791,13 @@ export default function MainIsland() {
                 </div>
                 <div class="flex flex-row my-1">
                   <p class="ml-0 mr-auto w-1/3">Burnout Angle</p><input onInput={changeBurnoutAngle} class="bg-gray-200 rounded-md w-full px-4" type="number" id="burnout-angle" value={burnoutAngle} /><p class="mx-auto">degrees</p>
+                </div>
+                <div class="flex flex-row my-1">
+                  <p class="ml-0 mr-auto w-1/3">Trajectory Model</p>
+                  <select onInput={changeTrajectoryModel} class="bg-gray-200 rounded-md w-full pl-auto pr-4" name="trajectoryModel" id="trajectoryModel" value={trajectoryModel}>
+                    <option selected value="Minimum Energy">Minimum Energy</option>
+                    <option value="Burnout Angle">Burnout Angle</option>
+                  </select>
                 </div>
               </div>
             </div>
