@@ -741,9 +741,9 @@ export default function Simulation({ accessCode }: SimulationProps) {
         !isLoading && !hasResults ? (
           <div class="flex flex-col mt-4 gap-2 w-full">
             {/* All Parameters */}
-            <p class="flex-grow-1 text-xl">Input Parameters</p>
+            <p class="flex-grow-1 text-xl ml-2">Input Parameters</p>
             {/* Presets TODO: add all presets */}
-            <select class="flex-grow-1 bg-gray-200 rounded-md" onInput={changePreset}>
+            <select class="flex-grow-1 bg-gray-200 rounded-md ml-2" onInput={changePreset}>
               <option selected disabled value="">Preset</option>
               <option value="Germany - V2">Germany - V2</option>
               <option value="Russia - Scud-B">Russia - Scud-B</option>
@@ -757,7 +757,7 @@ export default function Simulation({ accessCode }: SimulationProps) {
               <option value="DPRK - TD-2">DPRK - TD-2</option>
             </select>
 
-            <div class="flex flex-row">
+            <div class="flex flex-row ml-2">
               <p class="ml-0 mr-auto w-1/3">Name</p><input onInput={changeName} class="bg-gray-200 rounded-md w-full px-4" type="text" id={`name`} value={name} />
             </div>
 
