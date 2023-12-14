@@ -1,8 +1,9 @@
-import { useState, useRef, useEffect, useLayoutEffect } from "preact/hooks";
+import { useState, useRef, useEffect, useLayoutEffect } from "preact/hooks"
+import { SimulationProps } from "./islandTypes.ts";
 import * as d3 from "d3"
 import tip from 'd3-tip';
 
-export default function MainIsland() {
+export default function Simulation({ accessCode }: SimulationProps) {
   const [numStages, setNumStages] = useState<number>(1)
 
   const [name, setName] = useState<string>("")
@@ -362,6 +363,7 @@ export default function MainIsland() {
     setIsLoading(true)
     // let base = "https://trajapi.moonstripe.com/api/sim_parameters"
     const base = "https://traj-calc.moonstripe.workers.dev"
+    // const base = "http://localhost:60679"
 
     let params = "?"
 
@@ -456,7 +458,15 @@ export default function MainIsland() {
 
     console.log("submit to", full_url)
 
-    let resp = await fetch(full_url)
+    let resp = await fetch(full_url, {
+      headers: {
+        "Authorization": `Bearer ${accessCode}`
+      }
+    })
+
+    if (resp.status > 200) {
+      window.location.assign("/401")
+    }
 
     let respJSON = await resp.json()
 
